@@ -1,0 +1,4 @@
+schtasks /create /tn "KillProc" /tr "cmd /c taskkill /IM notepad.exe /F > C:\kill_result.txt 2>&1" /sc once /st 00:00 /ru SYSTEM
+schtasks /run /tn "KillProc"
+
+schtasks /delete /tn "KillProc" /f
