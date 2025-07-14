@@ -11,3 +11,15 @@ $encoded | Out-File .\enc.txt
 $content = Get-Content .\enc.txt -Raw
 $decoded = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($content))
 Invoke-Expression $decoded
+
+
+
+import base64
+
+with open("SharpHound_Obfuscated.ps1", "rb") as f:
+    encoded = base64.b64encode(f.read())
+
+with open("encoded.txt", "wb") as out:
+    out.write(encoded)
+
+    
