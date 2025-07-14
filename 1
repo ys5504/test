@@ -50,3 +50,18 @@ print(proc.stderr)
 bloodhound-python -u <username> -p <password> -d <domain> -dc-ip <dc-ip> -c All
 
 
+
+Get-ChildItem -Recurse -Directory | Where-Object {
+    $_.Attributes -notmatch 'ReadOnly' -and
+    (Test-Path $_.FullName -PathType Container) -and
+    (New-Object System.Security.AccessControl.DirectorySecurity).Access | Out-Null
+    try {
+        $tempFile = [System.IO.Path]::Combine($_.FullName, "___test.txt")
+        New-Item $tempFile -ItemType File -Force -ErrorAction Stop | Out-Null
+        Remove-Item $tempFile -Force
+        $true
+    } catch {
+        $false
+    }
+}
+
