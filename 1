@@ -1,1 +1,6 @@
 adfind -f "(&(objectcategory=user)(userAccountControl:1.2.840.113556.1.4.803:=4194304))" sAMAccountName
+adfind -f "(&(objectcategory=user)(userAccountControl:1.2.840.113556.1.4.803:=65536))" sAMAccountName
+adfind -f "(&(objectcategory=user)(lastLogonTimestamp<=132000000000000000))" sAMAccountName lastLogonTimestamp
+adfind -f "memberof=CN=Domain Admins,CN=Users,DC=domain,DC=com" sAMAccountName
+adfind -f "(&(objectcategory=user)(userAccountControl:1.2.840.113556.1.4.803:=64))" sAMAccountName
+adfind -f "(&(objectcategory=user)(userAccountControl:1.2.840.113556.1.4.803:=2))" sAMAccountName
