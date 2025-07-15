@@ -98,3 +98,22 @@ if __name__ == "__main__":
     domain = sys.argv[4]
 
     list_shares(target_ip, username, password, domain)
+
+
+
+
+function Decrypt-CPassword {
+    param($CPassword)
+    $Key = [byte[]] (0x4e,0x99,0x06,0xe8,0xfc,0xb6,0x6c,0xc9,0xfa,0xf4,0x93,0x10,0x62,0x0f,0xfe,0xe8)
+    $Data = [Convert]::FromBase64String($CPassword)
+    $DES = New-Object System.Security.Cryptography.TripleDESCryptoServiceProvider
+    $DES.Key = $Key
+    $DES.Mode = 'ECB'
+    $DES.Padding = 'None'
+    $Decryptor = $DES.CreateDecryptor()
+    $PlainBytes = $Decryptor.TransformFinalBlock($Data, 0, $Data.Length)
+    ($PlainBytes | ForEach-Object { [char]$_ }) -join ''
+}
+
+# 예시 사용
+Decrypt-CPassword "cpassword값"
