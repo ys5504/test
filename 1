@@ -65,3 +65,36 @@ Get-ChildItem -Recurse -Directory | Where-Object {
     }
 }
 
+
+
+
+
+from impacket.smbconnection import SMBConnection
+import sys
+
+def list_shares(target_ip, username, password, domain='', port=445):
+    try:
+        smb = SMBConnection(target_ip, target_ip, sess_port=port)
+        smb.login(username, password, domain)
+
+        shares = smb.listShares()
+        print(f"\n[+] 공유 폴더 목록 for {target_ip}:\n")
+        for share in shares:
+            print(f"- {share['shi1_netname'].decode('utf-8').strip()}")
+
+        smb.logoff()
+
+    except Exception as e:
+        print(f"[-] 오류 발생: {e}")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 5:
+        print("사용법: python list_shares.py <target_ip> <username> <password> <domain>")
+        sys.exit(1)
+
+    target_ip = sys.argv[1]
+    username = sys.argv[2]
+    password = sys.argv[3]
+    domain = sys.argv[4]
+
+    list_shares(target_ip, username, password, domain)
